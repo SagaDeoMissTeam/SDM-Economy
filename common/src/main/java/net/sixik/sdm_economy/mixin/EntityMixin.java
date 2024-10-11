@@ -2,6 +2,7 @@ package net.sixik.sdm_economy.mixin;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.sixik.sdm_economy.SDMEconomy;
 import net.sixik.sdm_economy.api.ICustomData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

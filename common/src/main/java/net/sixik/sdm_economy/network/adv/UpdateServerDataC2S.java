@@ -1,36 +1,42 @@
 package net.sixik.sdm_economy.network.adv;
 
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.networking.simple.BaseC2SMessage;
+import dev.architectury.networking.simple.BaseS2CMessage;
+import dev.architectury.networking.simple.MessageType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.sixik.sdm_economy.SDMEconomy;
 import net.sixik.sdm_economy.adv.PlayerMoneyData;
+import net.sixik.sdm_economy.network.EconomyNetwork;
 
-public record UpdateServerDataC2S(CompoundTag nbt) implements CustomPacketPayload {
+public class UpdateServerDataC2S extends BaseC2SMessage {
 
-    public static final Type<UpdateServerDataC2S> TYPE = new Type<>(ResourceLocation.tryBuild(SDMEconomy.MOD_ID, "update_server_data"));
+    public final CompoundTag nbt;
 
-    public static final StreamCodec<FriendlyByteBuf, UpdateServerDataC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.COMPOUND_TAG, UpdateServerDataC2S::nbt,
-            UpdateServerDataC2S::new
-    );
-
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public UpdateServerDataC2S(CompoundTag nbt) {
+        this.nbt = nbt;
     }
 
+    public UpdateServerDataC2S(FriendlyByteBuf buf) {
+        this.nbt = buf.readAnySizeNbt();
+    }
 
+    @Override
+    public MessageType getType() {
+        return EconomyNetwork.UPDATE_SERVER_DATA;
+    }
 
-    public static void handle(UpdateServerDataC2S message, NetworkManager.PacketContext context) {
-        context.queue(() -> {
-            PlayerMoneyData.SERVER.loadFromNBT(context.getPlayer(), message.nbt);
-            PlayerMoneyData.savePlayer(context.getPlayer().getGameProfile().getId(), context.getPlayer().getServer());
-        });
+    @Override
+    public void write(FriendlyByteBuf friendlyByteBuf) {
+        friendlyByteBuf.writeNbt(nbt);
+    }
+
+    @Override
+
+    public void handle(NetworkManager.PacketContext packetContext) {
+        PlayerMoneyData.SERVER.loadFromNBT(packetContext.getPlayer(), nbt);
+        PlayerMoneyData.savePlayer(packetContext.getPlayer().getGameProfile().getId(), packetContext.getPlayer().getServer());
     }
 }

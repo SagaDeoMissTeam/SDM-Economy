@@ -1,32 +1,40 @@
 package net.sixik.sdm_economy.network.adv;
 
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.networking.simple.BaseS2CMessage;
+import dev.architectury.networking.simple.MessageType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.sixik.sdm_economy.SDMEconomy;
 import net.sixik.sdm_economy.adv.PlayerMoneyData;
+import net.sixik.sdm_economy.network.EconomyNetwork;
 
-public record UpdateClientDataS2C(CompoundTag nbt) implements CustomPacketPayload {
+public class UpdateClientDataS2C extends BaseS2CMessage {
 
-    public static final Type<UpdateClientDataS2C> TYPE = new Type<>(ResourceLocation.tryBuild(SDMEconomy.MOD_ID, "update_client_data"));
+    public final CompoundTag nbt;
 
-    public static final StreamCodec<FriendlyByteBuf, UpdateClientDataS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.COMPOUND_TAG, UpdateClientDataS2C::nbt,
-            UpdateClientDataS2C::new
-    );
+    public UpdateClientDataS2C(CompoundTag nbt) {
+        this.nbt = nbt;
+    }
 
+    public UpdateClientDataS2C(FriendlyByteBuf buf) {
+        this.nbt = buf.readAnySizeNbt();
+    }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public MessageType getType() {
+        return EconomyNetwork.UPDATE_CLIENT_DATA;
     }
 
-    public static void handle(UpdateClientDataS2C message, NetworkManager.PacketContext context) {
-        context.queue(() -> PlayerMoneyData.loadFromNBTClient(message.nbt));
+    @Override
+    public void write(FriendlyByteBuf friendlyByteBuf) {
+        friendlyByteBuf.writeNbt(nbt);
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void handle(NetworkManager.PacketContext packetContext) {
+        PlayerMoneyData.loadFromNBTClient(nbt);
+    }
 }

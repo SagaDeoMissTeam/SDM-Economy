@@ -1,25 +1,17 @@
 package net.sixik.sdm_economy.adv;
 
-import dev.architectury.networking.NetworkManager;
-import dev.ftb.mods.ftblibrary.util.NetworkHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.LevelResource;
 import net.sixik.sdm_economy.SDMEconomy;
 import net.sixik.sdm_economy.common.cap.MoneyData;
-import net.sixik.sdm_economy.common.currency.AbstractCurrency;
-import net.sixik.sdm_economy.common.currency.CurrencyRegister;
 import net.sixik.sdm_economy.network.adv.UpdateClientDataS2C;
-import net.sixik.sdm_economy.network.register.UpdateRegisterCurrenciesS2C;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +22,6 @@ public class PlayerMoneyData {
 
 
     public static String folderName = "SDMEconomy";
-    public static String customCurrenciesFile = "custom_currencies.data";
 
     public static PlayerMoneyData CLIENT = new PlayerMoneyData();
     public static PlayerMoneyData SERVER;
@@ -51,9 +42,7 @@ public class PlayerMoneyData {
 
     public static void onPlayerLoggedIn(ServerPlayer player) {
         from(player);
-
-        NetworkHelper.sendTo(player, new UpdateRegisterCurrenciesS2C(CurrencyRegister.getRegisteredCurrencies()));
-        NetworkHelper.sendTo(player, new UpdateClientDataS2C(PlayerMoneyData.SERVER.saveToNBT(player)));
+        new UpdateClientDataS2C(PlayerMoneyData.SERVER.saveToNBT(player)).sendTo(player);
         PlayerMoneyData.savePlayer(player.getGameProfile().getId(), player.server);
     }
 
@@ -74,13 +63,11 @@ public class PlayerMoneyData {
             return;
         }
 
-        loadCustomCurrency(server);
-
         try {
             SERVER.PLAYER_MONEY.clear();
             for (File file : path.toFile().listFiles()) {
                 UUID uuid = UUID.fromString(FilenameUtils.removeExtension(file.getName()));
-                CompoundTag nbt = NbtIo.read(file.toPath());
+                CompoundTag nbt = NbtIo.read(file);
                 if(nbt == null) continue;
 
                 MoneyData moneyData = new MoneyData();
@@ -88,7 +75,7 @@ public class PlayerMoneyData {
                 SERVER.PLAYER_MONEY.put(uuid, moneyData);
             }
         } catch (Exception e){
-            SDMEconomy.printStackTrace(e.getMessage(), e);
+            SDMEconomy.printStackTrace("", e);
         }
     }
 
@@ -99,8 +86,6 @@ public class PlayerMoneyData {
         if(!path.toFile().exists()) {
             path.toFile().mkdir();
         }
-
-        saveCustomCurrency(server);
 
         for (UUID uuid : SERVER.PLAYER_MONEY.keySet()) {
             savePlayer(uuid, path);
@@ -148,9 +133,9 @@ public class PlayerMoneyData {
             Path f1 = path.resolve(player.toString() + ".data");
             if(!f1.toFile().exists())
                 f1.toFile().createNewFile();
-            NbtIo.write(SERVER.PLAYER_MONEY.get(player).serializeNBT(), f1);
+            NbtIo.write(SERVER.PLAYER_MONEY.get(player).serializeNBT(), f1.toFile());
         } catch (Exception e) {
-            SDMEconomy.printStackTrace(e.getMessage(), e);
+            SDMEconomy.printStackTrace("", e);
         }
     }
 
@@ -177,48 +162,5 @@ public class PlayerMoneyData {
         }
 
         return PLAYER_MONEY.get(player.getGameProfile().getId()).serializeNBT();
-    }
-
-    public static void saveCustomCurrency(MinecraftServer server) {
-        Path path = server.getWorldPath(LevelResource.ROOT);
-
-        CompoundTag nbt = new CompoundTag();
-        ListTag currenciesList = new ListTag();
-        for (AbstractCurrency.Constructor<?> value : CurrencyRegister.CUSTOM_CURRENCIES.values()) {
-            currenciesList.add(value.createDefault().serializeNBT());
-        }
-        nbt.put("currenciesList", currenciesList);
-        try {
-            NbtIo.write(nbt, path.resolve(customCurrenciesFile));
-        } catch (IOException e) {
-            SDMEconomy.printStackTrace(e.getMessage(), e);
-        }
-    }
-
-    public static void loadCustomCurrency(MinecraftServer server) {
-        Path path = server.getWorldPath(LevelResource.ROOT);
-        File customFile = path.resolve(customCurrenciesFile).toFile();
-        if(!customFile.exists()) return;
-
-        try {
-            CompoundTag nbt = NbtIo.read(customFile.toPath());
-            if(nbt == null) return;
-            CurrencyRegister.CUSTOM_CURRENCIES.clear();
-            ListTag currenciesList = (ListTag) nbt.get("currenciesList");
-            for (Tag tag : currenciesList) {
-                AbstractCurrency currency = new AbstractCurrency(0) {
-                    @Override
-                    public String getID() {
-                        return ((CompoundTag)tag).getString("currencyID");
-                    }
-                };
-                currency.deserializeNBT((CompoundTag) tag);
-                AbstractCurrency.Constructor<?> constructor = () -> currency;
-                CurrencyRegister.registerCustomCurrency(constructor);
-                CurrencyRegister.register(constructor);
-            }
-        } catch (Exception e) {
-            SDMEconomy.printStackTrace(e.getMessage(), e);
-        }
     }
 }

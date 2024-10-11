@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
+import net.sixik.sdm_economy.SDMEconomy;
 import net.sixik.sdm_economy.api.ICustomData;
 import net.sixik.sdm_economy.common.currency.AbstractCurrency;
 import net.sixik.sdm_economy.common.currency.CurrencyRegister;

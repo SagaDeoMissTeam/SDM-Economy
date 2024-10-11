@@ -5,6 +5,7 @@ import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.utils.Env;
 import net.sixik.sdm_economy.adv.PlayerMoneyData;
+import net.sixik.sdm_economy.network.adv.UpdateClientDataS2C;
 
 public class ModEvents {
 
