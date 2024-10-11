@@ -1,0 +1,44 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+#issueTrackerURL = ""
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "sdm_economy"
+version = "1.21-1.6.4"
+displayName = "SDM Economy"
+authors = ""
+description = '''
+
+'''
+#logoFile = ""
+
+[[dependencies.sdm_economy]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.sdm_economy]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.sdm_economy]]
+modId = "architectury"
+type = "required"
+versionRange = "[13.0.6,)"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.sdm_economy]]
+modId = "ftblibrary"
+type = "required"
+versionRange = "[2101.1.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[mixins]]
+config = "sdm_economy.mixins.json"

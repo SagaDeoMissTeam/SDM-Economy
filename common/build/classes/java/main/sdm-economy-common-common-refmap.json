@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "net/sixik/sdm_economy/mixin/EntityMixin": {
+      "load": "Lnet/minecraft/class_1297;method_5651(Lnet/minecraft/class_2487;)V",
+      "saveWithoutId": "Lnet/minecraft/class_1297;method_5647(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "net/sixik/sdm_economy/mixin/EntityMixin": {
+        "load": "Lnet/minecraft/class_1297;method_5651(Lnet/minecraft/class_2487;)V",
+        "saveWithoutId": "Lnet/minecraft/class_1297;method_5647(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;"
+      }
+    }
+  }
+}
