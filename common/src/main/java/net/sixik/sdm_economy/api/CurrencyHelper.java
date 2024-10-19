@@ -24,15 +24,24 @@ public class CurrencyHelper {
             new UpdateServerDataC2S(PlayerMoneyData.CLIENT.CLIENT_MONET.serializeNBT()).sendToServer();
         } else {
             MoneyData data = PlayerMoneyData.from((ServerPlayer) player);
-            data.setMoney(id, amount);
+            if(PlayerMoneyData.OTHER_CURRENCY_MOD != null) {
+                PlayerMoneyData.OTHER_CURRENCY_MOD.setMoney(player, id, amount);
+                PlayerMoneyData.OTHER_CURRENCY_MOD.updateMoneyData(player, data);
+            } else {
+                data.setMoney(id, amount);
+            }
             new UpdateClientDataS2C(data.serializeNBT()).sendTo((ServerPlayer) player);
         }
     }
 
     public static long getMoney(Player player, String id){
-        for (AbstractCurrency currency : getPlayerData(player).currencies) {
-            if(Objects.equals(currency.getID(), id)) {
-                return currency.moneys;
+        if(PlayerMoneyData.OTHER_CURRENCY_MOD != null) {
+            return PlayerMoneyData.OTHER_CURRENCY_MOD.getMoney(player, id);
+        } else {
+            for (AbstractCurrency currency : getPlayerData(player).currencies) {
+                if (Objects.equals(currency.getID(), id)) {
+                    return currency.moneys;
+                }
             }
         }
 

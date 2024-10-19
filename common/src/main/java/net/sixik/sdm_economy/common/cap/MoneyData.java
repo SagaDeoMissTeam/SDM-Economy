@@ -5,6 +5,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.sixik.sdm_economy.SDMEconomy;
+import net.sixik.sdm_economy.adv.PlayerMoneyData;
 import net.sixik.sdm_economy.api.ICustomData;
 import net.sixik.sdm_economy.common.currency.AbstractCurrency;
 import net.sixik.sdm_economy.common.currency.CurrencyRegister;
@@ -16,6 +17,8 @@ import java.util.Objects;
 
 public class MoneyData {
 
+    public boolean isOtherMod = false;
+    public String otherModId = "sdm_economy";
     public long moneyBase = 0;
     public List<AbstractCurrency> currencies = new ArrayList<>();
 
@@ -97,14 +100,23 @@ public class MoneyData {
             tags.add(currency.serializeNBT());
         }
         nbt.put("currencies", tags);
+        nbt.putString("otherModId", otherModId);
+        nbt.putBoolean("isOtherMod", isOtherMod);
         return nbt;
     }
 
 
     public void deserializeNBT(CompoundTag nbt) {
+        if(nbt.contains("isOtherMod")) {
+            this.isOtherMod = nbt.getBoolean("isOtherMod");
+        }
+        if(nbt.contains("otherModId")) {
+            this.otherModId = nbt.getString("otherModId");
+        }
+
+
         ListTag tags = (ListTag) nbt.get("currencies");
         currencies.clear();
-
         assert tags != null;
         for (Tag tag : tags) {
             CompoundTag d1 = (CompoundTag) tag;

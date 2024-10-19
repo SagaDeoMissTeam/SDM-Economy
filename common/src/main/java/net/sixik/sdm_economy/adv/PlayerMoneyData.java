@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.LevelResource;
 import net.sixik.sdm_economy.SDMEconomy;
+import net.sixik.sdm_economy.api.IOtherCurrency;
 import net.sixik.sdm_economy.common.cap.MoneyData;
 import net.sixik.sdm_economy.network.adv.UpdateClientDataS2C;
 import org.apache.commons.io.FilenameUtils;
@@ -19,7 +20,9 @@ import java.util.UUID;
 
 public class PlayerMoneyData {
 
+    public static boolean isImpactorLoaded = false;
 
+    public static IOtherCurrency OTHER_CURRENCY_MOD = null;
 
     public static String folderName = "SDMEconomy";
 
@@ -31,11 +34,29 @@ public class PlayerMoneyData {
 
     public static MoneyData from(ServerPlayer player) {
         if(SERVER.PLAYER_MONEY.containsKey(player.getGameProfile().getId())) {
-            return SERVER.PLAYER_MONEY.get(player.getGameProfile().getId());
+            MoneyData data = SERVER.PLAYER_MONEY.get(player.getGameProfile().getId());
+            if(data.isOtherMod) {
+                if(OTHER_CURRENCY_MOD != null) {
+                    data.otherModId = OTHER_CURRENCY_MOD.getModID();
+                    OTHER_CURRENCY_MOD.updateMoneyData(player, data);
+                } else {
+                    data.isOtherMod = false;
+                    data.loadAllCurrencies();
+                }
+            }
+
+            return data;
         }
 
         MoneyData data = new MoneyData();
-        data.loadAllCurrencies();
+        if(OTHER_CURRENCY_MOD != null) {
+            data.isOtherMod = true;
+            data.otherModId = OTHER_CURRENCY_MOD.getModID();
+            OTHER_CURRENCY_MOD.updateMoneyData(player, data);
+        } else {
+            data.loadAllCurrencies();
+        }
+
         SERVER.PLAYER_MONEY.put(player.getGameProfile().getId(), data);
         return SERVER.PLAYER_MONEY.get(player.getGameProfile().getId());
     }

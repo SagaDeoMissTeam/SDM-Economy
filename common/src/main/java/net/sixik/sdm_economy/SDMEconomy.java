@@ -1,6 +1,8 @@
 package net.sixik.sdm_economy;
 
 import com.mojang.logging.LogUtils;
+import dev.architectury.platform.Platform;
+import net.sixik.sdm_economy.adv.PlayerMoneyData;
 import net.sixik.sdm_economy.common.currency.CurrencyRegister;
 import net.sixik.sdm_economy.events.ModEvents;
 import net.sixik.sdm_economy.network.EconomyNetwork;
@@ -15,6 +17,11 @@ public class SDMEconomy
 		CurrencyRegister.init();
 		EconomyNetwork.init();
 		ModEvents.initialize();
+
+
+		if(Platform.isModLoaded("impactor")) {
+			LOGGER.info("Loaded other currency mod IMPACTOR (https://github.com/NickImpact/Impactor/tree/1.20.1)");
+		}
 	}
 
 	public static void printStackTrace(String str, Throwable s){
