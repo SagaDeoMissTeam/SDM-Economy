@@ -185,3 +185,4 @@ public class PlayerMoneyData {
         return PLAYER_MONEY.get(player.getGameProfile().getId()).serializeNBT();
     }
 }
+

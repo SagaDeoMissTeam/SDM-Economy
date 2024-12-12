@@ -1,5 +1,9 @@
 package net.sixik.sdm_economy;
 
+import net.sixik.sdm_economy.common.currency.CurrencyRegister;
+import net.sixik.sdm_economy.events.ModEvents;
+import net.sixik.sdm_economy.network.EconomyNetwork;
+
 import com.mojang.logging.LogUtils;
 import dev.architectury.platform.Platform;
 import net.sixik.sdm_economy.adv.PlayerMoneyData;

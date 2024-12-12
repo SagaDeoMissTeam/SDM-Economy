@@ -88,11 +88,11 @@ public class CurrencyHelper {
     public static class Basic {
 
         public static void addMoney(Player player, long count){
-             CurrencyHelper.addMoney(player, "basic_money", count);
+            CurrencyHelper.addMoney(player, "basic_money", count);
         }
 
         public static void setMoney(Player player, long count){
-             CurrencyHelper.setMoney(player, "basic_money", count);
+            CurrencyHelper.setMoney(player, "basic_money", count);
         }
 
         public static long getMoney(Player player){
