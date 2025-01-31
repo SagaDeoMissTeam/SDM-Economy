@@ -10,7 +10,7 @@ public interface EconomyNetwork {
 
     SimpleNetworkManager NET = SimpleNetworkManager.create(SDMEconomy.MOD_ID);
     MessageType UPDATE_CLIENT_DATA = NET.registerS2C("update_client_data", UpdateClientDataS2C::new);
-    MessageType UPDATE_SERVER_DATA = NET.registerC2S("update_server_data", UpdateServerDataC2S::new);
+//    MessageType UPDATE_SERVER_DATA = NET.registerC2S("update_server_data", UpdateServerDataC2S::new);
 
     static void init(){
 

@@ -6,3 +6,6 @@ forge/.gradle/
 forge/build/
 forge/run/
 common/.gradle/
+.idea/
+.gradle/
+build/

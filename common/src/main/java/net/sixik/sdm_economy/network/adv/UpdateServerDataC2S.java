@@ -25,7 +25,8 @@ public class UpdateServerDataC2S extends BaseC2SMessage {
 
     @Override
     public MessageType getType() {
-        return EconomyNetwork.UPDATE_SERVER_DATA;
+//        return EconomyNetwork.UPDATE_SERVER_DATA;
+        return null;
     }
 
     @Override

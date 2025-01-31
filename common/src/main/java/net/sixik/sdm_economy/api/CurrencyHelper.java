@@ -21,7 +21,7 @@ public class CurrencyHelper {
     public static void setMoney(Player player, String id, long amount){
         if(player.isLocalPlayer()){
             PlayerMoneyData.CLIENT.CLIENT_MONET.setMoney(id, amount);
-            new UpdateServerDataC2S(PlayerMoneyData.CLIENT.CLIENT_MONET.serializeNBT()).sendToServer();
+//            new UpdateServerDataC2S(PlayerMoneyData.CLIENT.CLIENT_MONET.serializeNBT()).sendToServer();
         } else {
             MoneyData data = PlayerMoneyData.from((ServerPlayer) player);
             if(PlayerMoneyData.OTHER_CURRENCY_MOD != null) {
