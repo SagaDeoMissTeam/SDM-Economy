@@ -1,36 +1,35 @@
 {
   "schemaVersion": 1,
-  "id": "sdm_economy",
+  "id": "sdmeconomy",
   "version": "${version}",
-  "name": "SDM Economy",
+  "name": "SDMEconomy",
   "description": "",
   "authors": [
-    ""
+    "Sixik"
   ],
   "contact": {
     "homepage": ""
   },
   "license": "All-Rights-Reserved",
-  "icon": "assets/sdm_economy/icon.png",
+  "icon": "assets/sdmeconomy/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.sixik.sdm_economy.fabric.SDMEconomyFabric"
+      "net.sixik.sdmeconomy.fabric.SDMEconomyFabric"
     ],
     "client": [
-      "net.sixik.sdm_economy.fabric.client.SDMEconomyFabricClient"
+      "net.sixik.sdmeconomy.fabric.client.SDMEconomyFabricClient"
     ]
   },
   "mixins": [
-    "sdm_economy.mixins.json"
+    "sdmeconomy.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.5",
+    "fabricloader": ">=0.16.10",
     "minecraft": "~1.21.1",
     "java": ">=21",
-    "architectury": ">=13.0.6",
-    "fabric-api": "*",
-    "ftblibrary": "*"
+    "architectury": ">=13.0.8",
+    "fabric-api": "*"
   },
   "suggests": {
     "another-mod": "*"

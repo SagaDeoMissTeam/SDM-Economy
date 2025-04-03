@@ -1,0 +1,10 @@
+package net.sixik.sdmeconomy.api;
+
+import java.util.UUID;
+
+public interface IIntegrationCurrency {
+
+    void addCurrency(UUID player, double amount);
+    void setCurrency(UUID player, double amount);
+    double getCurrency(UUID player);
+}

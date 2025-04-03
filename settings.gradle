@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'sdm_economy'
+rootProject.name = 'sdmeconomy'
 
 include 'common'
 include 'fabric'

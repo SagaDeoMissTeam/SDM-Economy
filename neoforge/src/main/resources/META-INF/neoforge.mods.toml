@@ -4,41 +4,35 @@ loaderVersion = "[2,)"
 license = "All Rights Reserved"
 
 [[mods]]
-modId = "sdm_economy"
+modId = "sdmeconomy"
 version = "${version}"
-displayName = "SDM Economy"
-authors = ""
+displayName = "SDMEconomy"
+authors = "Sixik"
 description = '''
 
 '''
 #logoFile = ""
 
-[[dependencies.sdm_economy]]
+[[dependencies.sdmeconomy]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.sdm_economy]]
+[[dependencies.sdmeconomy]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.sdm_economy]]
+[[dependencies.sdmeconomy]]
 modId = "architectury"
 type = "required"
-versionRange = "[13.0.6,)"
-ordering = "AFTER"
-side = "BOTH"
-[[dependencies.sdm_economy]]
-modId = "ftblibrary"
-type = "required"
-versionRange = "[2101.1.1,)"
+versionRange = "[13.0.8,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[mixins]]
-config = "sdm_economy.mixins.json"
+config = "sdmeconomy.mixins.json"
