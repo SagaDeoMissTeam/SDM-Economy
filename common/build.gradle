@@ -11,4 +11,5 @@ dependencies {
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 
     modApi files("./libs/Impactor-Neoforge-5.3.0+1.21.1.jar")
+    api "net.kyori:adventure-api:4.22.0"
 }
