@@ -87,21 +87,6 @@ public class EconomyAPI {
         CurrencyHelper.syncCurrencyData(server);
     }
 
-    @Deprecated
-    public static CompletableFuture<CurrencyData> sendRequestToGetAllCurrencyData() {
-        return CurrencyHelper.sendRequestToGetAllCurrencyData();
-    }
-
-    @Deprecated
-    public static CompletableFuture<CurrencyPlayerData.PlayerCurrency> sendRequestToGetPlayerCurrency(String currencyName) {
-        return CurrencyHelper.sendRequestToGetPlayerCurrency(currencyName);
-    }
-
-    @Deprecated
-    public static CompletableFuture<Void> sendRequestSyncData() {
-        return CurrencyHelper.sendRequestSyncData();
-    }
-
     public static UUID getPlayerUUID(Player player) {
         return CurrencyHelper.getPlayerUUID(player);
     }
