@@ -11,6 +11,7 @@ import net.sixik.sdmeconomy.economyData.CurrencyData;
 import net.sixik.sdmeconomy.economyData.CurrencyPlayerData;
 import net.sixik.sdmeconomy.integrations.impactor.ImpactorCurrency;
 import net.sixik.sdmeconomy.integrations.impactor.ImpactorHelper;
+import net.sixik.sdmeconomy.network.ASK.ASKHandler;
 import net.sixik.sdmeconomy.utils.CurrencyHelper;
 
 import java.util.LinkedList;
@@ -29,6 +30,7 @@ public class SDMEconomyEvents {
         });
 
         LifecycleEvent.SERVER_STARTED.register((server) -> {
+            new ASKHandler(server);
             CurrencyData.SERVER = new CurrencyData(new LinkedList<>());
             CurrencyData.SERVER.server = server;
             if (ImpactorCurrency.isLoaded()){

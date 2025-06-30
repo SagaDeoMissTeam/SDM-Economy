@@ -13,15 +13,12 @@ import net.sixik.sdmeconomy.economy.Currency;
 import net.sixik.sdmeconomy.economyData.CurrenciesIO;
 import net.sixik.sdmeconomy.economyData.CurrencyData;
 import net.sixik.sdmeconomy.economyData.CurrencyPlayerData;
-import net.sixik.sdmeconomy.integrations.impactor.ImpactorCurrency;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
 import net.sixik.sdmeconomy.network.packages.client.SendCurrenciesS2C;
 import net.sixik.sdmeconomy.network.packages.client.SendCustomDataS2C;
 import net.sixik.sdmeconomy.network.packages.client.SendPlayerCurrenciesS2C;
 import net.sixik.sdmeconomy.network.packages.server.SendCreateCurrencyC2S;
 import net.sixik.sdmeconomy.network.packages.server.SendDeleteCurrencyC2S;
-import net.sixik.sdmeconomy.network.requests.SendRequestInputC2S;
-import net.sixik.sdmeconomy.network.requests.func.GetPlayerCurrencyRequest;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -108,49 +105,6 @@ public class CurrencyHelper {
 
     public static void syncCurrencyData(MinecraftServer server) {
         new SendCurrenciesS2C(CurrenciesIO.saveToNBT(CurrencyData.SERVER.currencies)).sendToAll(server);
-    }
-
-    @Deprecated
-    public static CompletableFuture<CurrencyData> sendRequestToGetAllCurrencyData() {
-        CompletableFuture<CurrencyData> future = new CompletableFuture<>();
-        SDMEconomyNetwork.Requests.futuresClient.put(RequestsHelper.GET_ALL_CURRENCY_DATA, future);
-        new SendRequestInputC2S(RequestsHelper.GET_ALL_CURRENCY_DATA, new CompoundTag()).sendToServer();
-
-        future.orTimeout(10, TimeUnit.SECONDS).exceptionally(ex -> {
-            System.err.println("Request timed out: " + ex.getMessage());
-            return null;
-        });
-
-        return future;
-    }
-
-    public static CompletableFuture<CurrencyPlayerData.PlayerCurrency> sendRequestToGetPlayerCurrency(String currencyName) {
-        CompletableFuture<CurrencyPlayerData.PlayerCurrency> future = new CompletableFuture<>();
-        SDMEconomyNetwork.Requests.futuresClient.put(RequestsHelper.GET_PLAYER_CURRENCY_DATA, future);
-
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString(GetPlayerCurrencyRequest.CURRENCY_NAME_KEY, currencyName);
-        new SendRequestInputC2S(RequestsHelper.GET_PLAYER_CURRENCY_DATA, nbt).sendToServer();
-
-        future.orTimeout(10, TimeUnit.SECONDS).exceptionally(ex -> {
-            System.err.println("Request timed out: " + ex.getMessage());
-            return null;
-        });
-
-        return future;
-    }
-
-    public static CompletableFuture<Void> sendRequestSyncData() {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        SDMEconomyNetwork.Requests.futuresClient.put(RequestsHelper.SYNC_DATA, future);
-        new SendRequestInputC2S(RequestsHelper.SYNC_DATA, new CompoundTag()).sendToServer();
-
-        future.orTimeout(10, TimeUnit.SECONDS).exceptionally(ex -> {
-            System.err.println("Request timed out: " + ex.getMessage());
-            return null;
-        });
-
-        return future;
     }
 
     public static void createCurrencyOnClient(Currency currency) {

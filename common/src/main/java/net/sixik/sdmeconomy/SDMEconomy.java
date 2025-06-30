@@ -1,12 +1,7 @@
 package net.sixik.sdmeconomy;
 
 import com.mojang.logging.LogUtils;
-import net.sixik.sdmeconomy.utils.RequestsHelper;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
-import net.sixik.sdmeconomy.network.requests.SDMRequest;
-import net.sixik.sdmeconomy.network.requests.func.GetAllCurrencyDataRequest;
-import net.sixik.sdmeconomy.network.requests.func.GetPlayerCurrencyRequest;
-import net.sixik.sdmeconomy.network.requests.func.SyncDataRequest;
 import org.slf4j.Logger;
 
 public final class SDMEconomy {
@@ -14,23 +9,9 @@ public final class SDMEconomy {
     public static Logger LOGGER = LogUtils.getLogger();
 
     public static void init() {
-
         SDMEconomyNetwork.init();
 
         SDMEconomyEvents.init();
-        registerRequests();
-    }
-
-    private static void registerRequests() {
-        RequestsHelper.GET_ALL_CURRENCY_DATA = RequestsHelper.registerRequest(
-                new SDMRequest<>(GetAllCurrencyDataRequest.getName(), GetAllCurrencyDataRequest::server, GetAllCurrencyDataRequest::client)
-        );
-        RequestsHelper.GET_PLAYER_CURRENCY_DATA = RequestsHelper.registerRequest(
-                new SDMRequest<>(GetPlayerCurrencyRequest.getName(), GetPlayerCurrencyRequest::server, GetPlayerCurrencyRequest::client)
-        );
-        RequestsHelper.SYNC_DATA = RequestsHelper.registerRequest(
-                new SDMRequest<>(SyncDataRequest.getName(), SyncDataRequest::server, SyncDataRequest::client)
-        );
     }
 
     public static void printStackTrace(String str, Throwable s){
