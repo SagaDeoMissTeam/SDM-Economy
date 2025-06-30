@@ -1,9 +1,6 @@
 package net.sixik.sdmeconomy;
 
 import com.mojang.logging.LogUtils;
-import dev.architectury.platform.Platform;
-import net.sixik.sdmeconomy.api.CustomCurrencies;
-import net.sixik.sdmeconomy.integrations.impactor.ImpactorCurrency;
 import net.sixik.sdmeconomy.utils.RequestsHelper;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
 import net.sixik.sdmeconomy.network.requests.SDMRequest;
@@ -22,12 +19,6 @@ public final class SDMEconomy {
 
         SDMEconomyEvents.init();
         registerRequests();
-
-
-
-        if(ImpactorCurrency.isLoaded()) {
-            CustomCurrencies.CURRENCIES.put(ImpactorCurrency.getCurrencyID(), ImpactorCurrency::new);
-        }
     }
 
     private static void registerRequests() {

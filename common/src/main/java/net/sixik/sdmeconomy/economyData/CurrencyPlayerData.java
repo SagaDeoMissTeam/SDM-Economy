@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.LevelResource;
 import net.sixik.sdmeconomy.api.IIntegrationCurrency;
+import net.sixik.sdmeconomy.integrations.impactor.ImpactorCurrency;
 import net.sixik.sdmeconomy.utils.CurrencyHelper;
 import net.sixik.sdmeconomy.utils.ErrorCodeStruct;
 import net.sixik.sdmeconomy.utils.ErrorCodes;
@@ -78,10 +79,10 @@ public class CurrencyPlayerData {
             if (currencyOpt.isPresent()) {
 
                 var cur = currencyOpt.get();
-                if(cur.currency instanceof IIntegrationCurrency iIntegrationCurrency) {
-                    iIntegrationCurrency.setCurrency(player, value);
+                if(cur.currency instanceof ImpactorCurrency impactorCurrency) {
+                    impactorCurrency.setCurrency(player, value);
 
-                    currencyOpt.get().balance = iIntegrationCurrency.getCurrency(player);
+                    currencyOpt.get().balance = impactorCurrency.getCurrency(player);
                 }
                 else
                     currencyOpt.get().balance = value;
@@ -107,8 +108,8 @@ public class CurrencyPlayerData {
 
             if(currencyOpt.isPresent()) {
                 var cur = currencyOpt.get();
-                if(cur.currency instanceof IIntegrationCurrency iIntegrationCurrency) {
-                    return new ErrorCodeStruct<>(iIntegrationCurrency.getCurrency(player), ErrorCodes.SUCCESS);
+                if(cur.currency instanceof ImpactorCurrency impactorCurrency) {
+                    return new ErrorCodeStruct<>(impactorCurrency.getCurrency(player), ErrorCodes.SUCCESS);
                 }
                 else
                     return new ErrorCodeStruct<>(cur.balance, ErrorCodes.SUCCESS);
