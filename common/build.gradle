@@ -11,4 +11,5 @@ dependencies {
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 
     compileOnly files("../libs/Impactor-Forge-5.2.7+1.20.1.jar")
+    api "net.kyori:adventure-api:4.22.0"
 }

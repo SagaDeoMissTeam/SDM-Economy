@@ -1,8 +1,8 @@
 package net.sixik.sdmeconomy;
 
 import com.mojang.logging.LogUtils;
-import net.sixik.sdmeconomy.currencies.CustomCurrencies;
-import net.sixik.sdmeconomy.currencies.compat.ImpactorCurrency;
+import net.sixik.sdmeconomy.currencies.compat.impactor.ImpactorCurrency;
+import net.sixik.sdmeconomy.currencies.compat.impactor.ImpactorHelper;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
 import org.slf4j.Logger;
 
@@ -13,7 +13,7 @@ public final class SDMEconomy {
     public static void init() {
 
         if(ImpactorCurrency.isLoaded()) {
-            CustomCurrencies.CURRENCIES.put(ImpactorCurrency.getCurrencyID(), ImpactorCurrency::new);
+            ImpactorHelper.registerImpactorCurrencies();
         }
 
         SDMEconomyNetwork.init();
