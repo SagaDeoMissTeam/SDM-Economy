@@ -2,14 +2,15 @@ package net.sixik.sdmeconomy;
 
 import com.mojang.logging.LogUtils;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
+import net.sixik.sdmeconomy.utils.BaseNetworkHandler;
 import org.slf4j.Logger;
 
 public final class SDMEconomy {
     public static final String MODID = "sdmeconomy";
     public static Logger LOGGER = LogUtils.getLogger();
 
-    public static void init() {
-        SDMEconomyNetwork.init();
+    public static void init(BaseNetworkHandler handler) {
+        SDMEconomyNetwork.init(handler);
 
         SDMEconomyEvents.init();
     }

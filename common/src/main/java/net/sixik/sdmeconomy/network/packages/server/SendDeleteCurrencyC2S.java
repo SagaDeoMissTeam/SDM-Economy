@@ -1,16 +1,23 @@
 package net.sixik.sdmeconomy.network.packages.server;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.sixik.sdmeconomy.utils.CurrencyHelper;
 import net.sixik.sdmeconomy.economy.Currency;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
 
-public class SendDeleteCurrencyC2S extends BaseC2SMessage {
+public class SendDeleteCurrencyC2S implements CustomPacketPayload {
+
+    public static final CustomPacketPayload.Type<SendDeleteCurrencyC2S> TYPE =
+            new CustomPacketPayload.Type<>(SDMEconomyNetwork.nameOf("send_delete_currency"));
+
+    public static final StreamCodec<FriendlyByteBuf, SendDeleteCurrencyC2S> STREAM_CODEC =
+            StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, SendDeleteCurrencyC2S::nbt, SendDeleteCurrencyC2S::new);
 
     private final CompoundTag nbt;
 
@@ -18,25 +25,23 @@ public class SendDeleteCurrencyC2S extends BaseC2SMessage {
         this.nbt = currency.serialize();
     }
 
-    public SendDeleteCurrencyC2S(RegistryFriendlyByteBuf buf) {
-        this.nbt = buf.readNbt();
+    public SendDeleteCurrencyC2S(CompoundTag compoundTag) {
+        this.nbt = compoundTag;
+    }
+
+    public CompoundTag nbt() {
+        return nbt;
     }
 
     @Override
-    public MessageType getType() {
-        return SDMEconomyNetwork.SEND_DELETE_CURRENCY;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(nbt);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(SendDeleteCurrencyC2S message, NetworkManager.PacketContext context) {
         if(!CurrencyHelper.isAdmin(context.getPlayer())) return;
 
-        CurrencyHelper.deleteCurrencyOnServer(Currency.deserialize(nbt));
+        CurrencyHelper.deleteCurrencyOnServer(Currency.deserialize(message.nbt));
 
         CurrencyHelper.saveAll(context.getPlayer().getServer());
 

@@ -11,6 +11,6 @@ public final class SDMEconomyFabric implements ModInitializer {
         // Proceed with mild caution.
 
         // Run our common setup.
-        SDMEconomy.init();
+        SDMEconomy.init(new FabricNetworkHandler());
     }
 }

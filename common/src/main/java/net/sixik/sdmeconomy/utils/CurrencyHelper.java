@@ -48,7 +48,7 @@ public class CurrencyHelper {
         try {
             syncCurrencyData(player);
             syncCustomData(player);
-            new SendPlayerCurrenciesS2C(player).sendTo(player);
+            SDMEconomyNetwork.sendTo(player, new SendPlayerCurrenciesS2C(player));
         } catch (Exception e) {
             SDMEconomy.printStackTrace("Error when try sync player currency", e);
             return ErrorCodes.FAIL;
@@ -100,15 +100,15 @@ public class CurrencyHelper {
     }
 
     public static void syncCurrencyData(ServerPlayer player) {
-        new SendCurrenciesS2C(CurrenciesIO.saveToNBT(CurrencyData.SERVER.currencies)).sendTo(player);
+        SDMEconomyNetwork.sendTo(player, new SendCurrenciesS2C(CurrenciesIO.saveToNBT(CurrencyData.SERVER.currencies)));
     }
 
     public static void syncCurrencyData(MinecraftServer server) {
-        new SendCurrenciesS2C(CurrenciesIO.saveToNBT(CurrencyData.SERVER.currencies)).sendToAll(server);
+        SDMEconomyNetwork.sendToAll(server, new SendCurrenciesS2C(CurrenciesIO.saveToNBT(CurrencyData.SERVER.currencies)));
     }
 
     public static void createCurrencyOnClient(Currency currency) {
-        new SendCreateCurrencyC2S(currency).sendToServer();
+        SDMEconomyNetwork.sendToServer(new SendCreateCurrencyC2S(currency));
     }
 
     public static ErrorCodes createCurrencyOnServer(Currency currency) {
@@ -127,7 +127,7 @@ public class CurrencyHelper {
     }
 
     public static void deleteCurrencyOnClient(Currency currency) {
-        new SendDeleteCurrencyC2S(currency).sendToServer();
+        SDMEconomyNetwork.sendToServer(new SendDeleteCurrencyC2S(currency));
     }
 
     public static ErrorCodes deleteCurrencyOnServer(Currency currency) {
@@ -150,7 +150,7 @@ public class CurrencyHelper {
             return ErrorCodes.FAIL;
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            new SendPlayerCurrenciesS2C(player).sendTo(player);
+            SDMEconomyNetwork.sendTo(player, new SendPlayerCurrenciesS2C(player));
         }
 
         return ErrorCodes.SUCCESS;
@@ -228,14 +228,14 @@ public class CurrencyHelper {
     }
 
     public static void syncCustomData(ServerPlayer player) {
-        new SendCustomDataS2C(getPlayerUUID(player)).sendTo((ServerPlayer) player);
+        SDMEconomyNetwork.sendTo(player, new SendCustomDataS2C(getPlayerUUID(player)));
     }
 
     public static ErrorCodes updateCustomData(ServerPlayer player, Consumer<CompoundTag> nbt) {
        try {
            CustomPlayerData.Data data = getCustomServerData().getPlayerCustomData(player);
            nbt.accept(data.nbt);
-           new SendCustomDataS2C(getPlayerUUID(player)).sendTo((ServerPlayer) player);
+           SDMEconomyNetwork.sendTo(player, new SendCustomDataS2C(getPlayerUUID(player)));
            return ErrorCodes.SUCCESS;
        } catch (Exception e) {
            SDMEconomy.printStackTrace("Error when update custom data", e);

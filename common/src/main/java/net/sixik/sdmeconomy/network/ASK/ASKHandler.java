@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.sixik.sdmeconomy.network.ASK.ASK_base.DataSyncASKC2S;
 import net.sixik.sdmeconomy.network.ASK.ASK_base.DataSyncASKS2C;
+import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,7 +89,7 @@ public class ASKHandler {
                 opt.ifPresent(serverPlayer -> server.execute(() -> {
                     request.startTime(System.currentTimeMillis());
                     request.waitRequest(true);
-                    new DataSyncASKS2C(value.id, value.data).sendTo(serverPlayer);
+                    SDMEconomyNetwork.sendTo(serverPlayer, new DataSyncASKS2C(value.id, value.data));
                 }));
             } else {
                 if((System.currentTimeMillis() - request.startTime) >= TIME_OUT)
@@ -132,7 +133,7 @@ public class ASKHandler {
     }
 
     public static void sendToServer(Data data) {
-        new DataSyncASKC2S(data.id, data.data).sendToServer();
+        SDMEconomyNetwork.sendToServer(new DataSyncASKC2S(data.id, data.data));
     }
 
     public static void sendToClient(ServerPlayer player, Data data) {

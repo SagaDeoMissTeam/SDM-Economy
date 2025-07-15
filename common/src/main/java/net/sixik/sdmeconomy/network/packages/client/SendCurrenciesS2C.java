@@ -1,38 +1,28 @@
 package net.sixik.sdmeconomy.network.packages.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.sixik.sdmeconomy.economyData.CurrencyData;
 import net.sixik.sdmeconomy.network.SDMEconomyNetwork;
 
-public class SendCurrenciesS2C extends BaseS2CMessage {
+public record SendCurrenciesS2C(CompoundTag nbt) implements CustomPacketPayload {
 
-    private final CompoundTag nbt;
+    public static final Type<SendCurrenciesS2C> TYPE =
+            new Type<>(SDMEconomyNetwork.nameOf("send_currencies"));
 
-    public SendCurrenciesS2C(CompoundTag nbt) {
-        this.nbt = nbt;
-    }
+    public static final StreamCodec<FriendlyByteBuf, SendCurrenciesS2C> STREAM_CODEC =
+            StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, SendCurrenciesS2C::nbt, SendCurrenciesS2C::new);
 
-
-    public SendCurrenciesS2C(RegistryFriendlyByteBuf buf) {
-        this.nbt = buf.readNbt();
-    }
-
-    @Override
-    public MessageType getType() {
-        return SDMEconomyNetwork.SEND_CURRENCIES;
+    public static void handle(SendCurrenciesS2C message, NetworkManager.PacketContext context) {
+        CurrencyData.CLIENT.reloadCurrenciesFromNetwork(message.nbt);
     }
 
     @Override
-    public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(nbt);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
-        CurrencyData.CLIENT.reloadCurrenciesFromNetwork(nbt);
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }
